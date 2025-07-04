@@ -16,21 +16,23 @@ const ChatMessage = ({ sender, message, isOwnMessage }: ChatMessageProps) => {
           ? "justify-center"
           : isOwnMessage
           ? "justify-end"
-          : "jsutify-start"
-      } items-center w-full mt-3
-      }  `}
+          : "justify-start"
+      } w-full mb-3`}
     >
       <div
-        className={`max-w-s px-4 py-2 rounded-lg ${
+        className={`max-w-xs px-4 py-2 rounded-lg ${
           isSystemMessage
-            ? "bg-gray-800 text-white text-center text-xs"
+            ? "bg-gray-600 text-white text-center text-xs"
             : isOwnMessage
             ? "bg-blue-500 text-white"
-            : "bg-white text-black"
+            : "bg-white text-black border border-gray-200"
         } shadow-md`}
       >
-        {isSystemMessage && <p className="text-sm font-bold">{sender}</p>}
-        <p>{message}</p>
+        {!isSystemMessage && (
+          <p className="text-xs text-gray-500 mb-1 font-medium">{sender}</p>
+        )}
+        {isSystemMessage && <p className="text-sm font-bold mb-1">{sender}</p>}
+        <p className="text-sm">{message}</p>
       </div>
     </div>
   );

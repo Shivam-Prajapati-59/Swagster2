@@ -17,21 +17,19 @@ const ChatForm = ({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex items-center gap-2 p-4 bg-white rounded-lg shadow-md w-full"
-    >
+    <form onSubmit={handleSubmit} className="flex items-center gap-3 w-full">
       <input
         type="text"
         onChange={(e: any) => setMessage(e.target.value)}
-        className="flex-1 px-4 border-2 py-2 rounded-lg focus:outline-none focus:border-blue-500"
+        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         placeholder="Type your message here..."
         value={message}
       />
 
       <button
         type="submit"
-        className="px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+        disabled={message.trim() === ""}
+        className="px-6 py-3 text-white bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg font-medium transition-all duration-200 transform hover:scale-105 disabled:transform-none"
       >
         Send
       </button>
