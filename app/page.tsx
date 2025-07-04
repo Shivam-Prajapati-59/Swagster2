@@ -14,22 +14,23 @@ export default function Home() {
   >([]);
 
   useEffect(() => {
+    socket.on("message", (data) => {
+      console.log("Received message:", data);
+      setMessages((prev) => [...prev, data]);
+    });
+
     socket.on("user_Joined", (message) => {
-      console.log(message);
-      setMessages((prev) => [
-        ...prev,
-        {
-          sender: "System",
-          message: message,
-        },
-      ]);
+      console.log("User joined:", message);
+      setMessages((prev) => [...prev, { sender: "System", message: message }]);
     });
 
     return () => {
-      socket.off("user_Joined"); // Clean up the event listener
-      socket.off("message"); // Clean up the message event listener
+      // Clean up the socket listeners when the component unmounts
+      socket.off("message");
+      socket.off("user_Joined");
+      console.log("Socket listeners cleaned up");
     };
-  }, []);
+  });
 
   const handleSentMessage = (message: string) => {
     const newMessage = {
@@ -40,18 +41,12 @@ export default function Home() {
   };
 
   const handleJoinRoom = () => {
-    if (username.trim() === "") {
-      alert("Please enter a username");
-      return;
+    if (roomId && username) {
+      // Emit a joinRoom event to the server
+      socket.emit("joinRoom", { roomId, username });
+      setJoined(true);
+      console.log(`${username} attempting to join room ${roomId}`);
     }
-    setJoined(true);
-    // Add a welcome message
-    setMessages([
-      {
-        sender: "System",
-        message: `${username} joined the room`,
-      },
-    ]);
   };
 
   return (
@@ -76,6 +71,13 @@ export default function Home() {
                   placeholder="Enter your username"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                />
+                <input
+                  type="text"
+                  placeholder="Enter your Room Id"
+                  value={roomId}
+                  onChange={(e) => setRoomId(e.target.value)}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                 />
               </div>

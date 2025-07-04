@@ -34,6 +34,16 @@ app.prepare().then(() => {
         .to(roomId)
         .emit("user_Joined", `${username} has joined the${roomId}`);
     });
+
+    socket.on("message", ({ message, roomId, sender }) => {
+      console.log(`Message from ${sender} in room ${roomId}: ${message}`);
+
+      socket.to(roomId).emit("message", {
+        sender: "system",
+        message: message,
+      });
+    });
+
     socket.on("disconnect", () => {
       console.log("A user disconnected:", socket.id);
     });
